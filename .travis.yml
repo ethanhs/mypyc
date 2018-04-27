@@ -1,7 +1,6 @@
 sudo: false
 language: python
-cache:
-  pip
+cache: pip
   directories:
     - /home/travis/virtualenv/python-3.6-debug/
     - /home/travis/python-3.6-debug/
