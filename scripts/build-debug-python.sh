@@ -13,5 +13,5 @@ pushd Python-$VERSION
 ./configure CFLAGS='-DPy_DEBUG -DPy_TRACE_REFS -DPYMALLOC_DEBUG' --with-pydebug --prefix=$PREFIX
 make -j4
 make install
-$PREFIX/pip3 install virtualenv
-$PREFIX/virtualenv ~/virtualenv/python-$MAJOR_VERSION-debug/
+$PREFIX/bin/pip3 install virtualenv
+$PREFIX/bin/virtualenv ~/virtualenv/python-$MAJOR_VERSION-debug/
