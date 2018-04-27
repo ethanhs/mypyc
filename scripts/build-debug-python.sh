@@ -1,7 +1,11 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
+
 VERSION=3.6.5
 MAJOR_VERSION=$(echo $VERSION | cut -d. -f1-2)
 PREFIX=~/python-$MAJOR_VERSION-debug/
+if [[ -d $PREFIX ]]; then
+    exit
+fi
 
 wget https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tgz
 tar zxf Python-$VERSION.tgz
