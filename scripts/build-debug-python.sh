@@ -3,7 +3,7 @@
 VERSION=3.6.5
 MAJOR_VERSION=$(echo $VERSION | cut -d. -f1-2)
 PREFIX=~/python-$MAJOR_VERSION-debug/
-if [[ -d $PREFIX ]]; then
+if [[ -f $PREFIX/bin/python3 ]]; then
     exit
 fi
 
