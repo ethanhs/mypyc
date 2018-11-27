@@ -20,17 +20,37 @@ class TestExternal(unittest.TestCase):
             env = {'CPPFLAGS': '-mmacosx-version-min=10.10'}
         else:
             env = os.environ.copy()
-        subprocess.check_call(['make', 'gtest_main.a'],
-                              env=env,
-                              cwd=os.path.join(base_dir, 'external', 'googletest', 'make'))
+        gtest_dir = os.path.join(base_dir, 'external', 'googletest')
+        build_dir = os.path.join(gtest_dir, 'build')
+        # make a build dir for a clean build or skip this if the directory
+        # already exists
+        if not os.path.exists(build_dir):
+            os.mkdir(build_dir)
+            subprocess.check_call(['cmake', '..',
+                                '-Dgtest_build_samples=OFF',
+                                '-Dgtest_build_tests=ON',
+                                '-Dcxx_no_exception=OFF',
+                                '-DCMAKE_BUILD_TYPE=Release'],
+                                env=env,
+                                cwd=build_dir)
+            # Run the build system (make, msbuild, ninja)
+            subprocess.check_call(['cmake', '--build', '.'], env=env,
+                                cwd=build_dir)
         # Build and run C unit tests.
         env = os.environ.copy()
         if 'GTEST_COLOR' not in os.environ:
             env['GTEST_COLOR'] = 'yes'  # Use fancy colors
-        status = subprocess.call(['make', 'test'],
+        lib_rt = os.path.join(base_dir, 'lib-rt')
+        lib_rt_build = os.path.join(lib_rt, 'build')
+        status_0 = subprocess.call(['cmake', '..'],
                                  env=env,
-                                 cwd=os.path.join(base_dir, 'lib-rt'))
-        if status != 0:
+                                 cwd=lib_rt_build)
+        status_1 = 1
+        p = subprocess.Popen(['cmake', '--build', '.'], cwd=lib_rt_build, stdout=subprocess.PIPE)
+        while True:
+            line = p.stdout.readline()
+            if not line: break
+        if status_0 != 0 or status_1 != 0:
             raise AssertionError("make test: C unit test failure")
 
     def test_self_type_check(self) -> None:

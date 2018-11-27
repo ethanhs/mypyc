@@ -1,3 +1,6 @@
 [submodule "mypy"]
 	path = external/mypy
 	url = https://github.com/python/mypy
+[submodule "external/googletest"]
+	path = external/googletest
+	url = git@github.com:google/googletest.git
